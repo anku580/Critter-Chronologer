@@ -1,10 +1,9 @@
 package com.udacity.jdnd.course3.critter.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Inheritance(strategy =  InheritanceType.JOINED)
 public class User {
 
     @Id
@@ -16,6 +15,10 @@ public class User {
     public User(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public User() {
+
     }
 
     public Long getId() {
