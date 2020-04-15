@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -35,12 +36,34 @@ public class UserController {
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        List<Customer> customers = userService.findAllCustomers();
+        List<CustomerDTO> customerDTOS = new ArrayList<CustomerDTO>();
+
+        for(int i=0; i<customers.size(); i++)
+        {
+            CustomerDTO customerDTO = new CustomerDTO();
+            customerDTO.setId(customers.get(i).getId());
+            customerDTO.setName(customers.get(i).getName());
+            customerDTO.setNotes((customers.get(i).getNotes()));
+            customerDTO.setPhoneNumber((customers.get(i).getPhoneNumber()));
+
+            customerDTOS.add(customerDTO);
+        }
+
+        return customerDTOS;
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+        Customer customer = userService.getCustomerByPetId(petId);
+        CustomerDTO customerDTO = new CustomerDTO();
+
+        customerDTO.setId(customer.getId());
+        customerDTO.setName(customer.getName());
+        customerDTO.setNotes((customer.getNotes()));
+        customerDTO.setPhoneNumber((customer.getPhoneNumber()));
+
+        return customerDTO;
     }
 
     @PostMapping("/employee")
