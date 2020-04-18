@@ -25,9 +25,9 @@ public class Pet implements Serializable {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "schedule_id")
+//    private Schedule schedule;
 
     public Long getId() {
         return id;
@@ -77,11 +77,11 @@ public class Pet implements Serializable {
         this.customer = customer;
     }
 
-    public Schedule getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
-    }
+//    public Schedule getSchedule() {
+//        return schedule;
+//    }
+//
+//    public void setSchedule(Schedule schedule) {
+//        this.schedule = schedule;
+//    }
 }

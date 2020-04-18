@@ -23,6 +23,8 @@ public class PetService {
     public Pet save(Pet pet, Long ownerId) {
         Customer customer = customerRepository.getOne(ownerId);
         pet.setCustomer(customer);
+        System.out.println(pet.getName());
+        System.out.println(customer.getName());
         customer.addPetToList(pet);
         customerRepository.save(customer);
         return petRepository.save(pet);

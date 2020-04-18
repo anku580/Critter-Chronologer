@@ -1,6 +1,8 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.Entity.Customer;
+import com.udacity.jdnd.course3.critter.Entity.Employee;
+import com.udacity.jdnd.course3.critter.Service.PetService;
 import com.udacity.jdnd.course3.critter.Service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Users.
@@ -24,6 +27,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PetService petService;
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
@@ -46,7 +52,8 @@ public class UserController {
             customerDTO.setName(customers.get(i).getName());
             customerDTO.setNotes((customers.get(i).getNotes()));
             customerDTO.setPhoneNumber((customers.get(i).getPhoneNumber()));
-
+            customerDTO.setPetIds(petService.findPetsByOwnerId(customers.get(i).getId())
+                    .stream().map(pet -> pet.getId()).collect(Collectors.toList()));
             customerDTOS.add(customerDTO);
         }
 
@@ -68,22 +75,37 @@ public class UserController {
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        Employee employee = new Employee();
+        employee.setId(employeeDTO.getId());
+        employee.setName(employeeDTO.getName());
+        employee.setSkills(employeeDTO.getSkills());
+        employee.setDaysAvailable(employeeDTO.getDaysAvailable());
+        return convertEmployeeToEmployeeDTO(userService.saveEmployee(employee));
     }
 
-    @PostMapping("/employee/{employeeId}")
-    public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    @GetMapping("/employee/{employeeId}")
+    public EmployeeDTO getEmployee(@PathVariable Long employeeId) {
+        Employee employee = userService.findEmployeeById(employeeId);
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+
+        employeeDTO.setId(employee.getId());
+        employeeDTO.setDaysAvailable(employee.getDaysAvailable());
+        employeeDTO.setName(employee.getName());
+        employeeDTO.setSkills(employee.getSkills());
+
+        return employeeDTO;
     }
 
     @PutMapping("/employee/{employeeId}")
-    public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable Long employeeId) {
+        userService.findEmployeeByIdAndSetAvailability(daysAvailable, employeeId);
     }
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        List<Employee> employees = userService.findAllEmployeeAvailable(employeeDTO.getDate(), employeeDTO.getSkills());
+        List<EmployeeDTO> employeeDTOS = employees.stream().map(employee -> convertEmployeeToEmployeeDTO(employee)).collect(Collectors.toList());
+        return employeeDTOS;
     }
 
     private Customer connvertCustomerDTOtoCustomer(CustomerDTO customerDTO) {
@@ -96,5 +118,16 @@ public class UserController {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
         return customerDTO;
+    }
+
+
+    private EmployeeDTO convertEmployeeToEmployeeDTO(Employee emp) {
+
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId(emp.getId());
+        employeeDTO.setName(emp.getName());
+        employeeDTO.setSkills(emp.getSkills());
+        employeeDTO.setDaysAvailable(emp.getDaysAvailable());
+        return employeeDTO;
     }
 }

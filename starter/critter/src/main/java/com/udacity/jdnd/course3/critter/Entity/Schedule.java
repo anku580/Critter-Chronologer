@@ -15,11 +15,11 @@ public class Schedule {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(mappedBy = "schedule", targetEntity = Employee.class)
-    private List<Long> employeeIds;
+    @OneToMany( targetEntity = Employee.class)
+    private List<Employee> employees;
 
-    @OneToMany(mappedBy = "customer", targetEntity = Pet.class)
-    private List<Long> petIds;
+    @OneToMany( targetEntity = Pet.class)
+    private List<Pet> pets;
 
     private LocalDate date;
 
@@ -34,20 +34,20 @@ public class Schedule {
         this.id = id;
     }
 
-    public List<Long> getEmployeeIds() {
-        return employeeIds;
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setEmployeeIds(List<Long> employeeIds) {
-        this.employeeIds = employeeIds;
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
-    public List<Long> getPetIds() {
-        return petIds;
+    public List<Pet> getPets() {
+        return pets;
     }
 
-    public void setPetIds(List<Long> petIds) {
-        this.petIds = petIds;
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 
     public LocalDate getDate() {
