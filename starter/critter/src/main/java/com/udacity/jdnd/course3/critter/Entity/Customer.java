@@ -1,11 +1,13 @@
 package com.udacity.jdnd.course3.critter.Entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-public class Customer extends User {
+public class Customer extends User implements Serializable {
 
     private String phoneNumber;
 
@@ -31,6 +33,8 @@ public class Customer extends User {
        pets.add(pet);
     }
 
+    public List<Pet> getPets() { return pets;}
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -45,5 +49,20 @@ public class Customer extends User {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(phoneNumber, customer.phoneNumber) &&
+                Objects.equals(notes, customer.notes) &&
+                Objects.equals(pets, customer.pets);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(phoneNumber, notes, pets);
     }
 }

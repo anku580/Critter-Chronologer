@@ -5,12 +5,13 @@ import com.udacity.jdnd.course3.critter.pet.PetType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity(name = "pet")
 public class Pet implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private PetType petType;
@@ -21,7 +22,7 @@ public class Pet implements Serializable {
 
     private String notes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -84,4 +85,23 @@ public class Pet implements Serializable {
 //    public void setSchedule(Schedule schedule) {
 //        this.schedule = schedule;
 //    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pet pet = (Pet) o;
+        return Objects.equals(id, pet.id) &&
+                petType == pet.petType &&
+                Objects.equals(name, pet.name) &&
+                Objects.equals(birthDate, pet.birthDate) &&
+                Objects.equals(notes, pet.notes) &&
+                Objects.equals(customer, pet.customer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, petType, name, birthDate, notes, customer);
+    }
 }

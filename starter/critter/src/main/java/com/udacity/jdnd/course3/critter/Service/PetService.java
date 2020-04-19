@@ -20,14 +20,13 @@ public class PetService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public Pet save(Pet pet, Long ownerId) {
+    public Pet savePet(Pet pet, Long ownerId) {
         Customer customer = customerRepository.getOne(ownerId);
         pet.setCustomer(customer);
-        System.out.println(pet.getName());
-        System.out.println(customer.getName());
+        pet = petRepository.save(pet);
         customer.addPetToList(pet);
         customerRepository.save(customer);
-        return petRepository.save(pet);
+        return pet;
     }
 
     public Optional<Pet> getPetById(Long id) {

@@ -37,6 +37,8 @@ public class UserService {
     }
 
     public Customer getCustomerByPetId(Long petId) {
+        System.out.println(petRepository.getOne(petId).getName());
+        System.out.println(petRepository.getOne(petId).getCustomer().getPhoneNumber());
         return petRepository.findById(petId).get().getCustomer();
     }
 

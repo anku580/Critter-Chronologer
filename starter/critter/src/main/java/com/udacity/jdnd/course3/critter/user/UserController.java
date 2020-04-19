@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet(@PathVariable long petId){
+    public CustomerDTO getOwnerByPet(@PathVariable Long petId){
         Customer customer = userService.getCustomerByPetId(petId);
         CustomerDTO customerDTO = new CustomerDTO();
 
@@ -69,7 +69,7 @@ public class UserController {
         customerDTO.setName(customer.getName());
         customerDTO.setNotes((customer.getNotes()));
         customerDTO.setPhoneNumber((customer.getPhoneNumber()));
-
+        customerDTO.setPetIds(customer.getPets().stream().map(pet -> pet.getId()).collect(Collectors.toList()));
         return customerDTO;
     }
 
